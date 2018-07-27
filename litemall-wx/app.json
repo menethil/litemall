@@ -28,19 +28,17 @@
     "pages/search/search",
     "pages/category/category",
     "pages/cart/cart",
-    "pages/shopping/checkout/checkout",
-    "pages/shopping/address/address",
-    "pages/shopping/addressAdd/addressAdd",
+    "pages/checkout/checkout",
     "pages/goods/goods",
     "pages/about/about"
   ],
   "window": {
+    "navigationBarBackgroundColor": "#FFFFFF",
     "navigationBarTitleText": "litemall小程序商城",
-    "navigationBarTextStyle": "#FFFFFF",
-    "navigationBarBackgroundColor": "#696969",
+    "enablePullDownRefresh": true,
+    "navigationBarTextStyle": "black",
     "backgroundColor": "#FFFFFF",
-    "backgroundTextStyle": "dark",
-    "enablePullDownRefresh": false
+    "backgroundTextStyle": "dark"
   },
   "tabBar": {
     "backgroundColor": "#fafafa",
