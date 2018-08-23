@@ -62,61 +62,96 @@ Page({
         url: "/pages/auth/login/login"
       });
     };
+ },
+ goGroupon() {
+  if (app.globalData.hasLogin) {
+   wx.navigateTo({
+    url: "/pages/groupon/myGroupon/myGroupon"
+   });
+  } else {
+   wx.navigateTo({
+    url: "/pages/auth/login/login"
+   });
+  };
+ },
+ goCollect() {
+  if (app.globalData.hasLogin) {
+   wx.navigateTo({
+    url: "/pages/ucenter/collect/collect"
+   });
+  } else {
+   wx.navigateTo({
+    url: "/pages/auth/login/login"
+   });
+  };
+ },
+ goFootprint() {
+  if (app.globalData.hasLogin) {
+   wx.navigateTo({
+    url: "/pages/ucenter/footprint/footprint"
+   });
+  } else {
+   wx.navigateTo({
+    url: "/pages/auth/login/login"
+   });
+  };
+ },
+ goAddress() {
+  if (app.globalData.hasLogin) {
+   wx.navigateTo({
+    url: "/pages/ucenter/address/address"
+   });
+  } else {
+   wx.navigateTo({
+    url: "/pages/auth/login/login"
+   });
+  };
+ },
+bindPhoneNumber: function (e) {
+  if (e.detail.errMsg !== "getPhoneNumber:ok"){
+    // 拒绝授权
+    return;
+  }
 
-  },
-  goCollect() {
-    if (app.globalData.hasLogin) {
-      wx.navigateTo({
-        url: "/pages/ucenter/collect/collect"
-      });
-    } else {
-      wx.navigateTo({
-        url: "/pages/auth/login/login"
-      });
-    };
-  },
-  goFootprint() {
-    if (app.globalData.hasLogin) {
-      wx.navigateTo({
-        url: "/pages/ucenter/footprint/footprint"
-      });
-    } else {
-      wx.navigateTo({
-        url: "/pages/auth/login/login"
-      });
-    };
-  },
-  goAddress() {
-    if (app.globalData.hasLogin) {
-      wx.navigateTo({
-        url: "/pages/ucenter/address/address"
-      });
-    } else {
-      wx.navigateTo({
-        url: "/pages/auth/login/login"
-      });
-    };
-  },
-  aboutUs: function() {
-    wx.navigateTo({
-      url: '/pages/about/about'
+  if (!app.globalData.hasLogin) {
+    wx.showToast({
+      title: '绑定失败：请先登录',
+      icon: 'none',
+      duration: 2000
     });
-  },
-  exitLogin: function() {
-    wx.showModal({
-      title: '',
-      confirmColor: '#b4282d',
-      content: '退出登录？',
-      success: function(res) {
-        if (res.confirm) {
-          wx.removeStorageSync('token');
-          wx.removeStorageSync('userInfo');
-          wx.switchTab({
-            url: '/pages/index/index'
-          });
-        }
-      }
-    })
+    return;
+  }
+
+  util.request(api.AuthBindPhone, { iv: e.detail.iv, encryptedData: e.detail.encryptedData }, 'POST').then(function (res) {
+    if (res.errno === 0) {
+      wx.showToast({
+        title: '绑定手机号码成功',
+        icon: 'success',
+        duration: 2000
+      });
+    }
+  });
+}, 
+aboutUs: function () {
+  wx.navigateTo({
+    url: '/pages/about/about'
+  });
+}, 
+ exitLogin: function() {
+  wx.showModal({
+   title: '',
+   confirmColor: '#b4282d',
+   content: '退出登录？',
+   success: function(res) {
+    if (res.confirm) {
+     wx.removeStorageSync('token');
+     wx.removeStorageSync('userInfo');
+     wx.switchTab({
+      url: '/pages/index/index'
+     });
+    }
+   }
+  })
 
   }
 })

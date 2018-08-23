@@ -56,6 +56,15 @@ public class SystemConfig extends BaseConfig {
         return getConfigBigDec(PRE_FIX + "freight.limit");
     }
 
+    public static String getMallName() {
+        return getConfig(PRE_FIX + "mallname");
+    }
+
+    public static boolean isAutoCreateShareImage() {
+        int autoCreate = getConfigInt(PRE_FIX + "shareimage.autocreate");
+        return autoCreate == 0 ? false : true;
+    }
+
     @Override
     public String getPrefix() {
         return PRE_FIX;

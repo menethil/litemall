@@ -7,17 +7,18 @@ import org.linlinjava.litemall.db.service.LitemallSearchHistoryService;
 import org.linlinjava.litemall.core.util.ResponseUtil;
 import org.linlinjava.litemall.wx.annotation.LoginUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotEmpty;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/wx/search")
+@Validated
 public class WxSearchController {
     @Autowired
     private LitemallKeywordService keywordsService;
@@ -56,8 +57,11 @@ public class WxSearchController {
             //取出用户历史关键字
             historyList = searchHistoryService.queryByUid(userId);
         }
+        else {
+            historyList = new ArrayList<>(0);
+        }
 
-        Map<String, Object> data = new HashMap();
+        Map<String, Object> data = new HashMap<String, Object>();
         data.put("defaultKeyword", defaultKeyword);
         data.put("historyKeywordList", historyList);
         data.put("hotKeywordList", hotKeywordList);
@@ -80,13 +84,9 @@ public class WxSearchController {
      *   失败则 { errno: XXX, errmsg: XXX }
      */
     @GetMapping("helper")
-    public Object helper(String keyword) {
-        if(keyword == null){
-            return ResponseUtil.badArgument();
-        }
-
-        Integer page = 1;
-        Integer size = 10;
+    public Object helper(@NotEmpty String keyword,
+                         @RequestParam(defaultValue = "1") Integer page,
+                         @RequestParam(defaultValue = "10") Integer size) {
         List<LitemallKeyword> keywordsList = keywordsService.queryByKeyword(keyword, page, size);
         String[] keys = new String[keywordsList.size()];
         int index = 0;

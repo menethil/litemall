@@ -4,11 +4,16 @@ import org.linlinjava.litemall.admin.annotation.LoginAdmin;
 import org.linlinjava.litemall.admin.service.AdminTokenManager;
 import org.linlinjava.litemall.core.util.ResponseUtil;
 import org.linlinjava.litemall.core.util.bcrypt.BCryptPasswordEncoder;
+import org.linlinjava.litemall.core.validator.Order;
+import org.linlinjava.litemall.core.validator.Sort;
 import org.linlinjava.litemall.db.domain.LitemallAdmin;
 import org.linlinjava.litemall.db.service.LitemallAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,6 +22,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/admin/admin")
+@Validated
 public class AdminAdminController {
     @Autowired
     private LitemallAdminService adminService;
@@ -47,9 +53,10 @@ public class AdminAdminController {
     @GetMapping("/list")
     public Object list(@LoginAdmin Integer adminId,
                        String username,
-                       @RequestParam(value = "page", defaultValue = "1") Integer page,
-                       @RequestParam(value = "limit", defaultValue = "10") Integer limit,
-                       String sort, String order){
+                       @RequestParam(defaultValue = "1") Integer page,
+                       @RequestParam(defaultValue = "10") Integer limit,
+                       @Sort @RequestParam(defaultValue = "add_time") String sort,
+                       @Order @RequestParam(defaultValue = "desc") String order){
         if(adminId == null){
             return ResponseUtil.unlogin();
         }
@@ -69,7 +76,19 @@ public class AdminAdminController {
             return ResponseUtil.unlogin();
         }
 
+        String username = admin.getUsername();
+        if(username == null){
+            return ResponseUtil.badArgument();
+        }
+        List<LitemallAdmin> adminList = adminService.findAdmin(username);
+        if(adminList.size() > 0){
+            return ResponseUtil.fail(402, "管理员已经存在");
+        }
+
         String rawPassword = admin.getPassword();
+        if(rawPassword == null || rawPassword.length() < 6){
+            return ResponseUtil.fail(402, "管理员密码长度不能小于6");
+        }
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedPassword = encoder.encode(rawPassword);
         admin.setPassword(encodedPassword);
@@ -80,13 +99,9 @@ public class AdminAdminController {
     }
 
     @GetMapping("/read")
-    public Object read(@LoginAdmin Integer adminId, Integer id){
+    public Object read(@LoginAdmin Integer adminId, @NotNull Integer id){
         if(adminId == null){
             return ResponseUtil.unlogin();
-        }
-
-        if(id == null){
-            return ResponseUtil.badArgument();
         }
 
         LitemallAdmin admin = adminService.findById(id);
@@ -100,7 +115,7 @@ public class AdminAdminController {
         }
 
         Integer anotherAdminId = admin.getId();
-        if(anotherAdminId.intValue() == 1){
+        if(anotherAdminId == 1){
             return ResponseUtil.fail(403, "超级管理员不能修改");
         }
 
@@ -120,7 +135,7 @@ public class AdminAdminController {
         }
 
         Integer anotherAdminId = admin.getId();
-        if(anotherAdminId.intValue() == 1){
+        if(anotherAdminId == 1){
             return ResponseUtil.fail(403, "超级管理员不能删除");
         }
         adminService.deleteById(anotherAdminId);

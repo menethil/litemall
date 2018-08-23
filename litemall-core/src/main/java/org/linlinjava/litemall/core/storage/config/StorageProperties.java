@@ -8,6 +8,7 @@ public class StorageProperties {
     private Local local;
     private Aliyun aliyun;
     private Tencent tencent;
+    private Qiniu qiniu;
 
     public String getActive() {
         return active;
@@ -41,9 +42,16 @@ public class StorageProperties {
         this.tencent = tencent;
     }
 
+    public Qiniu getQiniu() {
+        return qiniu;
+    }
+
+    public void setQiniu(Qiniu qiniu) {
+        this.qiniu = qiniu;
+    }
+
     public static class Local {
         private String address;
-        private String port;
         private String storagePath;
 
         public String getAddress() {
@@ -52,14 +60,6 @@ public class StorageProperties {
 
         public void setAddress(String address) {
             this.address = address;
-        }
-
-        public String getPort() {
-            return port;
-        }
-
-        public void setPort(String port) {
-            this.port = port;
         }
 
         public String getStoragePath() {
@@ -138,6 +138,45 @@ public class StorageProperties {
 
         public void setAccessKeySecret(String accessKeySecret) {
             this.accessKeySecret = accessKeySecret;
+        }
+
+        public String getBucketName() {
+            return bucketName;
+        }
+
+        public void setBucketName(String bucketName) {
+            this.bucketName = bucketName;
+        }
+    }
+
+    public static class Qiniu {
+        private String endpoint;
+        private String accessKey;
+        private String secretKey;
+        private String bucketName;
+
+        public String getEndpoint() {
+            return endpoint;
+        }
+
+        public void setEndpoint(String endpoint) {
+            this.endpoint = endpoint;
+        }
+
+        public String getAccessKey() {
+            return accessKey;
+        }
+
+        public void setAccessKey(String accessKey) {
+            this.accessKey = accessKey;
+        }
+
+        public String getSecretKey() {
+            return secretKey;
+        }
+
+        public void setSecretKey(String secretKey) {
+            this.secretKey = secretKey;
         }
 
         public String getBucketName() {

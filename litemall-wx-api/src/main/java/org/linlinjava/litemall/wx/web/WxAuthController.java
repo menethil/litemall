@@ -2,12 +2,11 @@ package org.linlinjava.litemall.wx.web;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import me.chanjar.weixin.common.exception.WxErrorException;
+import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.linlinjava.litemall.core.notify.NotifyService;
 import org.linlinjava.litemall.core.notify.NotifyType;
-import org.linlinjava.litemall.core.notify.SmsResult;
 import org.linlinjava.litemall.core.util.CharUtil;
 import org.linlinjava.litemall.core.util.JacksonUtil;
 import org.linlinjava.litemall.core.util.RegexUtil;
@@ -15,6 +14,7 @@ import org.linlinjava.litemall.core.util.ResponseUtil;
 import org.linlinjava.litemall.core.util.bcrypt.BCryptPasswordEncoder;
 import org.linlinjava.litemall.db.domain.LitemallUser;
 import org.linlinjava.litemall.db.service.LitemallUserService;
+import org.linlinjava.litemall.wx.annotation.LoginUser;
 import org.linlinjava.litemall.wx.dao.UserInfo;
 import org.linlinjava.litemall.wx.dao.UserToken;
 import org.linlinjava.litemall.wx.dao.WxLoginInfo;
@@ -22,6 +22,7 @@ import org.linlinjava.litemall.wx.service.CaptchaCodeManager;
 import org.linlinjava.litemall.wx.service.UserTokenManager;
 import org.linlinjava.litemall.wx.util.IpUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/wx/auth")
+@Validated
 public class WxAuthController {
     private final Log logger = LogFactory.getLog(WxAuthController.class);
 
@@ -137,7 +139,7 @@ public class WxAuthController {
             WxMaJscode2SessionResult result = this.wxService.getUserService().getSessionInfo(code);
             sessionKey = result.getSessionKey();
             openId = result.getOpenid();
-        } catch (WxErrorException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -169,6 +171,7 @@ public class WxAuthController {
 
         // token
         UserToken userToken = UserTokenManager.generateToken(user.getId());
+        userToken.setSessionKey(sessionKey);
 
         Map<Object, Object> result = new HashMap<Object, Object>();
         result.put("token", userToken.getToken());
@@ -189,7 +192,7 @@ public class WxAuthController {
         String phoneNumber = JacksonUtil.parseString(body, "mobile");
         String code = CharUtil.getRandomNum(6);
 
-        notifyService.notifySmsTemplateSync(phoneNumber, NotifyType.CAPTCHA, new String[]{code});
+        notifyService.notifySmsTemplate(phoneNumber, NotifyType.CAPTCHA, new String[]{code});
 
         boolean successful = CaptchaCodeManager.addToCache(phoneNumber, code);
         return successful ? ResponseUtil.ok() : ResponseUtil.badArgument();
@@ -332,6 +335,19 @@ public class WxAuthController {
 
         userService.update(user);
 
+        return ResponseUtil.ok();
+    }
+
+    @PostMapping("bindPhone")
+    public Object bindPhone(@LoginUser Integer userId, @RequestBody String body) {
+        String sessionKey = UserTokenManager.getSessionKey(userId);
+        String encryptedData = JacksonUtil.parseString(body, "encryptedData");
+        String iv = JacksonUtil.parseString(body, "iv");
+        WxMaPhoneNumberInfo phoneNumberInfo = this.wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
+        String phone = phoneNumberInfo.getPhoneNumber();
+        LitemallUser user = userService.findById(userId);
+        user.setMobile(phone);
+        userService.update(user);
         return ResponseUtil.ok();
     }
 }

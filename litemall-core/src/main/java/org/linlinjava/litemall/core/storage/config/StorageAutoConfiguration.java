@@ -21,7 +21,6 @@ public class StorageAutoConfiguration {
     @Bean
     public StorageService storageService() {
         StorageService storageService = new StorageService();
-        Map<String, Storage> supportedStorage = new HashMap<String, Storage>(3);
         String active = this.properties.getActive();
         storageService.setActive(active);
         if(active.equals("local")){
@@ -32,6 +31,9 @@ public class StorageAutoConfiguration {
         }
         else if(active.equals("tencent")){
             storageService.setStorage(tencentStorage());
+        }
+        else if(active.equals("qiniu")){
+            storageService.setStorage(qiniuStorage());
         }
         else{
             throw  new RuntimeException("当前存储模式 " + active + " 不支持");
@@ -45,7 +47,6 @@ public class StorageAutoConfiguration {
         LocalStorage localStorage = new LocalStorage();
         StorageProperties.Local local = this.properties.getLocal();
         localStorage.setAddress(local.getAddress());
-        localStorage.setPort(local.getPort());
         localStorage.setStoragePath(local.getStoragePath());
         return localStorage;
     }
@@ -70,5 +71,16 @@ public class StorageAutoConfiguration {
         tencentStorage.setBucketName(tencent.getBucketName());
         tencentStorage.setRegion(tencent.getRegion());
         return tencentStorage;
+    }
+
+    @Bean
+    public QiniuStorage qiniuStorage() {
+        QiniuStorage qiniuStorage =  new QiniuStorage();
+        StorageProperties.Qiniu qiniu = this.properties.getQiniu();
+        qiniuStorage.setAccessKey(qiniu.getAccessKey());
+        qiniuStorage.setSecretKey(qiniu.getSecretKey());
+        qiniuStorage.setBucketName(qiniu.getBucketName());
+        qiniuStorage.setEndpoint(qiniu.getEndpoint());
+        return qiniuStorage;
     }
 }

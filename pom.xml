@@ -9,7 +9,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.12.RELEASE</version>
+        <version>2.0.4.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -22,7 +22,6 @@
     <modules>
         <module>litemall-core</module>
         <module>litemall-db</module>
-        <module>litemall-os-api</module>
         <module>litemall-wx-api</module>
         <module>litemall-admin-api</module>
         <module>litemall-all</module>
@@ -42,11 +41,6 @@
             </dependency>
             <dependency>
                 <groupId>org.linlinjava</groupId>
-                <artifactId>litemall-os-api</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.linlinjava</groupId>
                 <artifactId>litemall-wx-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -55,11 +49,10 @@
                 <artifactId>litemall-admin-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
-                <groupId>com.fasterxml.jackson.datatype</groupId>
-                <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>2.9.5</version>
+                <groupId>org.linlinjava</groupId>
+                <artifactId>litemall-all</artifactId>
+                <version>${project.version}</version>
             </dependency>
 
             <!-- Spring Boot Mybatis 依赖 -->
@@ -86,19 +79,55 @@
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-starter</artifactId>
-                <version>1.1.9</version>
+                <version>1.1.10</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>weixin-java-pay</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
             </dependency>
 
             <dependency>
                 <groupId>com.github.binarywang</groupId>
                 <artifactId>weixin-java-miniapp</artifactId>
-                <version>3.0.0</version>
+                <version>3.1.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.qcloudsms</groupId>
+                <artifactId>qcloudsms</artifactId>
+                <version>1.0.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qcloud</groupId>
+                <artifactId>cos_api</artifactId>
+                <version>5.4.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>2.5.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>[7.2.0, 7.2.99]</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-json</artifactId>
+                <version>2.0.4.RELEASE</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-mail</artifactId>
+                <version>2.0.4.RELEASE</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

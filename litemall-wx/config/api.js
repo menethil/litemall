@@ -1,22 +1,12 @@
 // 以下是业务服务器API地址
 // 本机开发时使用
-//  var WxApiRoot = 'http://localhost:8082/wx/';
+ var WxApiRoot = 'http://localhost:8080/wx/';
 // 局域网测试使用
-// var WxApiRoot = 'http://192.168.0.101:8082/wx/';
+// var WxApiRoot = 'http://192.168.0.101:8080/wx/';
 // 云平台部署时使用
-var WxApiRoot = 'http://122.152.206.172:8082/wx/';
+// var WxApiRoot = 'http://122.152.206.172:8080/wx/';
 // 云平台上线时使用
 // var WxApiRoot = 'https://www.menethil.com.cn/wx/';
-
-// 以下是图片存储服务器API地址
-// 本机开发时使用
-// var StorageApi = 'http://localhost:8081/os/storage/create';
-// 局域网测试时使用
-// var StorageApi = 'http://192.168.0.101:8081/os/storage/create';
-// 云平台部署时使用
-var StorageApi = 'http://122.152.206.172:8081/os/storage/create';
-// 云平台上线时使用
-// var StorageApi = 'https://www.menethil.com.cn/os/storage/create';
 
 module.exports = {
  IndexUrl: WxApiRoot + 'home/index', //首页数据接口
@@ -28,6 +18,7 @@ module.exports = {
  AuthRegister: WxApiRoot + 'auth/register', //账号注册
  AuthReset: WxApiRoot + 'auth/reset', //账号密码重置
  AuthRegisterCaptcha: WxApiRoot + 'auth/regCaptcha', //验证码
+ AuthBindPhone: WxApiRoot + 'auth/bindPhone', //绑定微信手机号
 
  GoodsCount: WxApiRoot + 'goods/count', //统计商品总数
  GoodsList: WxApiRoot + 'goods/list', //获得商品列表
@@ -89,5 +80,9 @@ module.exports = {
 
  UserFormIdCreate: WxApiRoot + 'formid/create', //用户FromId，用于发送模版消息
 
- StorageUpload: StorageApi, //图片上传
+ GroupOn: WxApiRoot + 'groupon/query', //团购API-查询
+ GroupOnMy: WxApiRoot + 'groupon/my', //团购API-我的团购
+ GroupOnDetail: WxApiRoot + 'groupon/detail', //团购API-详情
+ GroupOnJoin: WxApiRoot + 'groupon/join', //团购API-详情
+  StorageUpload: WxApiRoot + 'storage/upload' //图片上传
 };

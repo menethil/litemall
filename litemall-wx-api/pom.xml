@@ -10,10 +10,6 @@
         <version>0.1.0</version>
     </parent>
 
-    <properties>
-        <docker.image.prefix>litemall</docker.image.prefix>
-    </properties>
-
     <dependencies>
 
         <dependency>
@@ -56,22 +52,6 @@
     </dependencies>
 
     <build>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -90,24 +70,6 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>com.spotify</groupId>
-                <artifactId>docker-maven-plugin</artifactId>
-                <version>0.4.13</version>
-                <configuration>
-                    <imageName>${docker.image.prefix}/${project.artifactId}</imageName>
-                    <dockerDirectory>src/main/docker</dockerDirectory>
-                    <resources>
-                        <resource>
-                            <targetPath>/</targetPath>
-                            <directory>${project.build.directory}</directory>
-                            <include>${project.build.finalName}.jar</include>
-                        </resource>
-                    </resources>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 

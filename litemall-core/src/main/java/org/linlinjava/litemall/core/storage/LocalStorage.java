@@ -3,9 +3,9 @@ package org.linlinjava.litemall.core.storage;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -20,7 +20,6 @@ public class LocalStorage implements Storage {
 
     private String storagePath;
     private String address;
-    private String port;
 
     private Path rootLocation;
 
@@ -47,19 +46,10 @@ public class LocalStorage implements Storage {
         this.address = address;
     }
 
-    public String getPort() {
-        return port;
-    }
-
-    public void setPort(String port) {
-        this.port = port;
-    }
-
-
     @Override
-    public void store(MultipartFile file, String keyName) {
+    public void store(InputStream inputStream, long contentLength, String contentType, String keyName) {
         try {
-            Files.copy(file.getInputStream(), rootLocation.resolve(keyName), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(inputStream, rootLocation.resolve(keyName), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file " + keyName, e);
         }
@@ -110,10 +100,7 @@ public class LocalStorage implements Storage {
 
     @Override
     public String generateUrl(String keyName) {
-        String url = address + ":" + port + "/os/storage/fetch/" + keyName;
-        if (!url.startsWith("http")) {
-            url = "http://" + url;
-        }
+        String url = address + keyName;
         return url;
     }
 }

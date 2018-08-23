@@ -13,6 +13,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-json</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
@@ -32,31 +37,10 @@
             <artifactId>druid-spring-boot-starter</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
     </dependencies>
 
 
     <build>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-        </resources>
-
         <plugins>
             <plugin>
                 <groupId>org.mybatis.generator</groupId>
@@ -78,7 +62,7 @@
                     <dependency>
                         <groupId>com.itfsw</groupId>
                         <artifactId>mybatis-generator-plugin</artifactId>
-                        <version>1.2.6</version>
+                        <version>1.2.10</version>
                     </dependency>
                 </dependencies>
             </plugin>
